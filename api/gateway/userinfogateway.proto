@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/mamoru777/userservice2/pkg/gateway-api";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+
+service UserInfoService {
+  rpc SignUpUserInfo(SignUpUserInfoRequest) returns (SignUpUserInfoResponse) {
+    option (google.api.http) = {
+      post: "/usrinfo/signup"
+      body: "*"
+    };
+  }
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse) {
+    option (google.api.http) = {
+      get: "/usrinfo/getuserinfo"
+    };
+  }
+  rpc GetUserList(GetUserListRequest) returns (GetUserListResponse) {
+    option (google.api.http) = {
+      get: "/usrinfo/getuserlist"
+    };
+  }
+}
+
+message SignUpUserInfoRequest {
+  User user = 1;
+}
+
+message SignUpUserInfoResponse {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message GetUserInfoRequest {}
+
+message GetUserInfoResponse {
+  User user = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+}
+
+message GetUserListRequest{}
+
+message GetUserListResponse {
+  repeated User result = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+}
+
+message User {
+  string fio = 1 [(validate.rules).string.min_len = 4,(google.api.field_behavior) = REQUIRED];
+  string post = 2 [(google.api.field_behavior) = REQUIRED];
+  string department = 3 [(google.api.field_behavior) = REQUIRED];
+}
